@@ -6,7 +6,7 @@ This can reduce the following code from:
 // .h file
 class GDExample {
     ...
-        float property = 1.0f;
+    float property = 1.0f;
     float get_property() const;
     void set_property(float value);
 };
@@ -31,7 +31,7 @@ to the following:
 // .h file
 class GDExample {
     ...
-        GD_EXPORT(float, property) = 1.0f;
+    GD_EXPORT(float, property) = 1.0f;
 };
 ```
 
@@ -44,9 +44,9 @@ The remainder of the required code is auto-generated.
 # Getting Started
 1. Add this repository as a git submodule.
 ```
-git submodule add [githuburl here] [dependency path]
+git submodule add https://github.com/AchtungKatse/gdextension-codegen [dependency path]
 i.e.
-git submodule add [url] dependencies/gdextension-codegen
+git submodule add https://github.com/AchtungKatse/gdextension-codegen dependencies/gdextension-codegen
 ```
 
 2. Add the following to your CMakeLists.txt file
@@ -59,37 +59,37 @@ set(codegen_source "")
 make_directory(${CMAKE_BINARY_DIR}/codegen)
 
 # Find all header files with exports
-    file(GLOB_RECURSE HEADER_FILES 
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
-                                                 ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
-                                                 )
-
-                                                 foreach (file IN ITEMS ${HEADER_FILES}) 
-# Modify source file name to output file path
-cmake_path(GET file FILENAME file_name)
-string(REPLACE ".h" ".cpp" file_name ${file_name})
-string(REPLACE ".hpp" ".cpp" file_name ${file_name})
-set(file_out_path "${CMAKE_BINARY_DIR}/codegen/${file_name}")
-
-set(file_target ${file}-target)
-string(REPLACE "/" "-" file_target ${file_target})
-
-message("Generating ${file} -> ${file_out_path}")
-
-# Create a target and command that converts the header to its generated source file
-add_custom_target(${file_target} SOURCES ${file})
-add_custom_command(
-OUTPUT ${file_out_path}
-MAIN_DEPENDENCY ${file}
-COMMAND source_gen file "${file}" -o "${file_out_path}"
-COMMENT "Generating source: ${file} -> ${file_out_path}"
-BYPRODUCTS ${file_out_path}
-DEPENDS ${file} source_gen
-VERBATIM
+file(GLOB_RECURSE HEADER_FILES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
 )
 
-# Add new source file to codegen source
-set(codegen_source ${codegen_source} ${file_out_path})
+foreach (file IN ITEMS ${HEADER_FILES}) 
+    # Modify source file name to output file path
+    cmake_path(GET file FILENAME file_name)
+    string(REPLACE ".h" ".cpp" file_name ${file_name})
+    string(REPLACE ".hpp" ".cpp" file_name ${file_name})
+    set(file_out_path "${CMAKE_BINARY_DIR}/codegen/${file_name}")
+
+    set(file_target ${file}-target)
+    string(REPLACE "/" "-" file_target ${file_target})
+
+    message("Generating ${file} -> ${file_out_path}")
+
+    # Create a target and command that converts the header to its generated source file
+    add_custom_target(${file_target} SOURCES ${file})
+    add_custom_command(
+    OUTPUT ${file_out_path}
+    MAIN_DEPENDENCY ${file}
+    COMMAND source_gen file "${file}" -o "${file_out_path}"
+    COMMENT "Generating source: ${file} -> ${file_out_path}"
+    BYPRODUCTS ${file_out_path}
+    DEPENDS ${file} source_gen
+    VERBATIM
+    )
+
+    # Add new source file to codegen source
+    set(codegen_source ${codegen_source} ${file_out_path})
 endforeach()
 ```
 
@@ -118,8 +118,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/godot-cpp)
 
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES 
-${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
-${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
 # Codegen
@@ -132,36 +132,36 @@ make_directory(${CMAKE_BINARY_DIR}/codegen)
 
 # Find all header files with exports
 file(GLOB_RECURSE HEADER_FILES 
-${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
-${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
 )
 
 foreach (file IN ITEMS ${HEADER_FILES}) 
-# Modify source file name to output file path
-cmake_path(GET file FILENAME file_name)
-string(REPLACE ".h" ".cpp" file_name ${file_name})
-string(REPLACE ".hpp" ".cpp" file_name ${file_name})
-set(file_out_path "${CMAKE_BINARY_DIR}/codegen/${file_name}")
+    # Modify source file name to output file path
+    cmake_path(GET file FILENAME file_name)
+    string(REPLACE ".h" ".cpp" file_name ${file_name})
+    string(REPLACE ".hpp" ".cpp" file_name ${file_name})
+    set(file_out_path "${CMAKE_BINARY_DIR}/codegen/${file_name}")
 
-set(file_target ${file}-target)
-string(REPLACE "/" "-" file_target ${file_target})
+    set(file_target ${file}-target)
+    string(REPLACE "/" "-" file_target ${file_target})
 
-message("Generating ${file} -> ${file_out_path}")
+    message("Generating ${file} -> ${file_out_path}")
 
-# Create a target and command that converts the header to its generated source file
-add_custom_target(${file_target} SOURCES ${file})
-add_custom_command(
-OUTPUT ${file_out_path}
-MAIN_DEPENDENCY ${file}
-COMMAND source_gen file "${file}" -o "${file_out_path}"
-COMMENT "Generating source: ${file} -> ${file_out_path}"
-BYPRODUCTS ${file_out_path}
-DEPENDS ${file} source_gen
-VERBATIM
-)
+    # Create a target and command that converts the header to its generated source file
+    add_custom_target(${file_target} SOURCES ${file})
+    add_custom_command(
+    OUTPUT ${file_out_path}
+    MAIN_DEPENDENCY ${file}
+    COMMAND source_gen file "${file}" -o "${file_out_path}"
+    COMMENT "Generating source: ${file} -> ${file_out_path}"
+    BYPRODUCTS ${file_out_path}
+    DEPENDS ${file} source_gen
+    VERBATIM
+    )
 
-# Add new source file to codegen source
-set(codegen_source ${codegen_source} ${file_out_path})
+    # Add new source file to codegen source
+    set(codegen_source ${codegen_source} ${file_out_path})
 endforeach()
 
 # Define the link libraries
@@ -169,8 +169,8 @@ add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${codegen_source})
 
 # Define the include DIRs
 target_include_directories(${PROJECT_NAME} PRIVATE
-"${CMAKE_CURRENT_SOURCE_DIR}/include/"
-"${CMAKE_CURRENT_SOURCE_DIR}/deps/godot-cpp/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+    "${CMAKE_CURRENT_SOURCE_DIR}/deps/godot-cpp/include"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE godot-cpp)
@@ -268,11 +268,11 @@ GDCLASS(GDExample, Sprite2D)
 ```
 
 # How it works
-As mentioned above, this tool checks all header files in a project for the use of the GD_EXPORT macro or bind methods functions to identify classes that require codegen. Each of these files are then read line by line to find all exports and property groups and emit appropriate functions based on their types. 
-This project assumes that
+As mentioned above, this tool checks all header files in a project for the use of the GD_EXPORT macro or bind methods functions to identify classes that require codegen. Each of these files are then read line by line to find all exports or groups and emits functions based on their types. 
+This project assumes that:
 1. All node types are pointers (i.e. Node3D*)
 2. All resource types are use the Ref<> class (i.e. Ref<PackedScene>)
 3. All variants use their default names since typedef classes are not automatically recognized.
 
 # Limitations
-    Currently, the project does not support enum types and users cannot easily add to or modify the _bind_methods() function. 
+Currently, the project does not support enum types and users cannot easily add to or modify the _bind_methods() function. 
